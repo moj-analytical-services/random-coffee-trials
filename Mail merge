@@ -1,0 +1,21 @@
+#How to mail merge
+#What's a COM object
+library(RDCOMClient)
+
+## init com api
+
+OutApp <- COMCreate("Outlook.Application")
+
+## create an email 
+
+outMail = OutApp$CreateItem(0)
+
+## configure  email parameter 
+
+outMail[["To"]] = "dest@dest.com"
+outMail[["subject"]] = "some subject"
+outMail[["body"]] = "some body"
+
+## send it               
+
+outMail$Send()
