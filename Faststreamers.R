@@ -1,10 +1,14 @@
-getwd ()
-setwd("/Users/inshachaddha/Documents/Life/Continued Learning/Coding and R")
+source("./Checkfile.R")
 
-faststreamers <- read.csv("Coffee-trails.csv")
+install.packages("readxl")
+library(readxl)
+faststreamers <- read_excel("Coffee-trails.xlsx")
 faststreamers <- (faststreamers[1:89,])
 
 #Create two variables (keeping existing list intact)
+faststreamers <-  dplyr::rename(faststreamers,NAME.1=`NAME 1` )
+faststreamers <-  dplyr::rename(faststreamers, NAME.2=`NAME 2`)
+
 demand <- with(faststreamers,rep(NAME.1))
 supply <- faststreamers$NAME.2
 
@@ -20,6 +24,9 @@ data.frame(d=sample(demand,n_matches),s=supply)
 data.frame(d=demand,s=sample(supply,n_matches))
 
 }
+
+faststreamers$donebefore <- NA
+
 
 
 #A while loop checks to see if the new combinations have been before and prints only combinations
