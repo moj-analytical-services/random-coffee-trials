@@ -1,5 +1,10 @@
 
 install.packages("RDCOMClient")
+
+library("devtools")
+install_github('omegahat/RDCOMClient')
+
+install.packages("RDCOMClient")
 install.packages("xtable")
 library(RDCOMClient)
 library(xtable)
@@ -48,10 +53,18 @@ install_github("rpremraj/mailR")
 library(mailR)
 
 send.mail(from = "inshachaddha@gmail.com",
-          to = c("Recipient 1 <inshachaddha@gmail.com>"),
-          subject = "Subject of the email",
-          body = "Body of the email",
+          to = c("<inshachaddha@gmail.com>"),
+          subject = "This is a test",
+          body = "Testing",
           smtp = list(host.name = "aspmx.l.google.com", port = 25),
           authenticate = FALSE,
           send = TRUE)
 
+
+send.mail(from = "insha.chaddha@justice.gov.uk",
+          to = "insha.chaddha@justice.gov.uk",
+          subject = "TESTING",
+          body = "TEST", 
+          authenticate = TRUE,
+          smtp = list(host.name = "smtp.office365.com", port = 587,
+                      user.name = "insha.chaddha@justice.gov.uk", passwd = "Glassbottle246", tls = TRUE))
