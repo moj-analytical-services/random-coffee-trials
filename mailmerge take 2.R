@@ -52,10 +52,10 @@ install_github("rpremraj/mailR")
 
 library(mailR)
 
-send.mail(from = "inshachaddha@gmail.com",
-          to = c("<inshachaddha@gmail.com>"),
-          subject = "This is a test",
-          body = "Testing",
+send.mail(from = "ardron.w@gmail.com",
+          to = c("<ardron.w@gmail.com>", "<inshachaddha@gmail.com>"),
+          subject = "DOES THIS WORK",
+          body = "BUTTS AND CATS AND BUTTS",
           smtp = list(host.name = "aspmx.l.google.com", port = 25),
           authenticate = FALSE,
           send = TRUE)
