@@ -1,24 +1,47 @@
 setwd("/Users/inshachaddha/Desktop/random-coffee-trials-master")
+
+#Always do this bit for stringr
 read
 install.packages("stringr")
 library(stringr)
 install.packages("sprintf")
 
-checkfile <- read.csv("Checkfile.csv")
+#Reload this whenever you update
+checkfile <- read.csv("FSNAMES.csv")
 checkfile <- checkfile[!checkfile$NAME.1=="",]
+
 checkfile$NAME.1 <- as.character(checkfile$NAME.1)
-checkfile$Email1 <- as.character(checkfile$Email1)
+checkfile$Primary.Email <- as.character(checkfile$Primary.Email)
+
+#This step is to give everyone a unique ID (I matched by IDs not names)
 checkfile$ID <- seq.int(nrow(checkfile))
 
-existing1 <- as.character(checkfile$ID[1:(length(randomised)/2)])
-existing2 <- as.character(checkfile$ID[(length(randomised)/2 + 1) : length(randomised)])
+#Check if odd or even numbers of participants. We decided that if there were odd numbers, we would remove Tom
+is.even <- function(x) x %% 2 == 0
+even <- is.even(length(checkfile$NAME.1))
+if (even == FALSE) {
+ checkfile <- checkfile[ ! (checkfile$NAME.1 == "Thomas Grant") , ]
+}
+length(checkfile$NAME.1)
 
-checkvector <- (interaction(existing1, existing2))
-checkvector <- as.character(checkvector)
+#Load all the combinations done previously
+existingcombinations <- read.csv("Existingcombinations.csv")
 
-#RUN BELOW
+#Check to make sure all names match up from old combos to full FS database
+wtf <- setdiff(existingcombinations$NAME.1, checkfile$NAME.1)
+wtf
+wtf2 <- setdiff(existingcombinations$NAME.2, checkfile$NAME.1)
+wtf2
+
+#This is to make a single vector of the existing combinations by just joining them with (Dot) in between
+existing1 <- checkfile$ID[match(existingcombinations$NAME.1, checkfile$NAME.1)]
+existing2 <- checkfile$ID[match(existingcombinations$NAME.2, checkfile$NAME.1)]
+checkvector <- as.character((interaction(existing1, existing2)))
+
+
+#RUN BELOW- This is the random matching code
 donebefore <- rep(1, 26)
-while (sum(donebefore) > 0) {
+while (sum(donebefore) > 0 && sum(closeby) > 0) {
 
   randomised <- sample(checkfile$ID)
     setone <- randomised[1:(length(randomised)/2)]
@@ -27,46 +50,52 @@ while (sum(donebefore) > 0) {
   matches <- data.frame(setone, settwo)
     combination <- as.character(with(matches, interaction(setone,settwo)))
     combinationreverse <- as.character(with(matches, interaction(settwo,setone)))
-    
+  
   donebefore <- (append(combination %in% checkvector, combinationreverse %in% checkvector))*1
+  
 }
 
+#This bit needs editing. I prefer to updating existing combos manually to prevent errors in testing
 checkvector <- append(checkvector, combination)
 print(combination)
 print(checkvector)
 
-
-
-#Creating CSV of below
+#Creating CSV of results, pretty
 
 ID1 <- str_extract(combination, "[^.]+")
 ID2 <- str_extract(combination, "[^.]*$")
 
-Email1 <- as.character(rep("hi",13))
-Email2 <- as.character(rep("hi",13))
-
-Department1 <- as.character(rep("hi",13))
-Department2 <- as.character(rep("hi",13))
-
-Name1 <- as.character(rep("hi",13))
-Name2 <- as.character(rep("hi",13))
-
-Pairs <- as.character(rep("hi",13))
-
-results <- data.frame(Pairs, Name1, Email1, Department1, Name2, Email2, Department2 )
+results <- data.frame(matrix(ncol = 11, nrow = length(checkfile$NAME.1)/2))
+x <- c("Pairs", "Name1", "Email1", "SecondaryEmail1", "Department1", 
+       "Location1", "Name2", "Email2", "SecondaryEmail2", "Department2", "Location2")
+colnames(results) <- x
 
   results$Name1 <- checkfile$NAME.1[match(ID1, checkfile$ID)]
   results$Name2 <- checkfile$NAME.1[match(ID2, checkfile$ID)]
 
-  results$Email1 <- checkfile$Email1[match(ID1, checkfile$ID)]
-  results$Email2 <- checkfile$Email1[match(ID2, checkfile$ID)]
-
-  results$Department1 <- checkfile$Department1[match(ID1, checkfile$ID)]
-  results$Department2 <- checkfile$Department1[match(ID2, checkfile$ID)]
+  results$Email1 <- checkfile$Primary.Email[match(ID1, checkfile$ID)]
+  results$Email2 <- checkfile$Primary.Email[match(ID2, checkfile$ID)]
   
-  Pairs <- interaction(results$Name1, results$Name2)
+  results$SecondaryEmail1 <- checkfile$Secondary.Email[match(ID1, checkfile$ID)]
+  results$SecondaryEmail2 <- checkfile$Secondary.Email[match(ID2, checkfile$ID)]
 
+  results$Department1 <- checkfile$DEPARTMENT[match(ID1, checkfile$ID)]
+  results$Department2 <- checkfile$DEPARTMENT[match(ID2, checkfile$ID)]
+  
+  results$Location1 <- checkfile$Location[match(ID1, checkfile$ID)]
+  results$Location2 <- checkfile$Location[match(ID2, checkfile$ID)]
+  
+  results$Pairs <- interaction(results$Name1, results$Name2)
+  
 #Create CSV of below
 print(results)
+write.csv(results, "Newcombination.csv")
+
+
+
+#LOCATION WORK
+barplot(prop.table(table(checkfile$Location)))
+
+
 
 
