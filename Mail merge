@@ -1,7 +1,6 @@
 #How to mail merge
 #What's a COM object
 library(RDCOMClient)
-
 ## init com api
 
 OutApp <- COMCreate("Outlook.Application")
