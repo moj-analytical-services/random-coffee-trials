@@ -1,7 +1,5 @@
-setwd("/Users/inshachaddha/Desktop/random-coffee-trials-master")
 
 #Always do this bit for stringr
-read
 install.packages("stringr")
 library(stringr)
 install.packages("sprintf")
