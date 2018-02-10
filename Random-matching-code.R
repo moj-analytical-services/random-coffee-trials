@@ -28,10 +28,10 @@ length(checkfile$NAME.1)
 existingcombinations <- read.csv("Existingcombinations.csv")
 
 #Check to make sure all names match up from old combos to full FS database
-wtf <- setdiff(existingcombinations$NAME.1, checkfile$NAME.1)
-wtf
-wtf2 <- setdiff(existingcombinations$NAME.2, checkfile$NAME.1)
-wtf2
+consistencycheck <- setdiff(existingcombinations$NAME.1, checkfile$NAME.1)
+print(consistencycheck)
+consistencycheck2 <- setdiff(existingcombinations$NAME.2, checkfile$NAME.1)
+print(consistencycheck)
 
 #This is to make a single vector of the existing combinations by just joining them with (Dot) in between
 existing1 <- checkfile$ID[match(existingcombinations$NAME.1, checkfile$NAME.1)]
@@ -55,7 +55,7 @@ while (sum(donebefore) > 0 && sum(closeby) > 0) {
   
 }
 
-#This bit needs editing. I prefer to updating existing combos manually to prevent errors in testing
+#This bit needs editing. I prefer to update existing combos manually to prevent errors in testing
 checkvector <- append(checkvector, combination)
 print(combination)
 print(checkvector)
@@ -92,9 +92,6 @@ print(results)
 write.csv(results, "Newcombination.csv")
 
 
-
-#LOCATION WORK
-barplot(prop.table(table(checkfile$Location)))
 
 
 
